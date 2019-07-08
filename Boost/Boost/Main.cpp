@@ -1,4 +1,5 @@
-#include <boost/chrono.hpp>
+#include <boost/tuple/tuple.hpp>
+#include <boost/tuple/tuple_io.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/variant.hpp>
@@ -7,51 +8,45 @@
 #include <cstddef>
 #include <iostream>
 #include <string>
+#include <cmath>
+
 using namespace boost::algorithm;
-using namespace boost::chrono;
+
+void f1();
+void f2();
+void f3();
+void f4();
+void f5();
 
 int main()
 {
-	f1();
-	f2();
-	f3();
-	f4();
-	f5();
+	f1();//Tuple
+	system("pause");
+	f2();//String algorithm
+	system("pause");
+	f3();//Integer
+	system("pause");
+	f4();//Variant
+	system("pause");
+	f5();//Pool
+	system("pause");
+	return 0;
 }
 
-//Chrono
-//I picked this because it is useful when dealing with time
-int f1()
+//Tuple
+//I picked this because it is useful when storing only two values
+void f1()
 {
-	//Returns a system time
-	std::cout << system_clock::now() << '\n';
-#ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
-	//This is used to return a time later on
-	std::cout << steady_clock::now() << '\n';
-#endif
-	//This is a type deffinition for system_clock and steady_clock
-	std::cout << high_resolution_clock::now() << '\n';
-
-#ifdef BOOST_CHRONO_HAS_PROCESS_CLOCKS
-	//Returns the CPU time for how long the application has been running
-	std::cout << process_real_cpu_clock::now() << '\n';
-	//Returns the CPU time the application has spend in user space
-	std::cout << process_user_cpu_clock::now() << '\n';
-	//Returns the time spent in the kernel space
-	std::cout << process_system_cpu_clock::now() << '\n';
-	//Returns a tuple with the CPU times of the data above this
-	std::cout << process_cpu_clock::now() << '\n';
-#endif
-
-#ifdef BOOST_CHRONO_HAS_THREAD_CLOCK
-	//Returns the time used by a thread
-	std::cout << thread_clock::now() << '\n';
-#endif
+	//Creating what will be stored in the parameters
+	typedef boost::tuple<std::string, int> animal;
+	//The data that is stored
+	animal a{ "cat", 4 };
+	std::cout << a << '\n';
 }
 
 //String Algorithm
 //This is useful if the data you are trying to collect has to be a certain case
-int f2()
+void f2()
 {
 	std::string s = "Boost C++ Libraries";
 	//This changes the above string to upper case
@@ -59,7 +54,7 @@ int f2()
 }
 
 //Integer
-int f3()
+void f3()
 {
 	//Carries the exact memory size of the name which is 8 bits
 	boost::int8_t i8 = 1;
@@ -86,18 +81,21 @@ int f3()
 
 //Variant
 //This is a template for data structures, this is useful for storing data
-int f4()
+void f4()
 {
 	//Creating the variant, all of the data types that are being used must be in the parameter to be stored
 	boost::variant<double, char, std::string> v;
 	v = 3.14;
+	std::cout << v << std::endl;
 	v = 'A';
+	std::cout << v << std::endl;
 	v = "Boost";
+	std::cout << v << std::endl;
 }
 
 //Pool
 //This is used for maintaining storage making sure the next memory space to be used is clear
-int f5()
+void f5()
 {
 	//Creates and manages segregated memory
 	boost::simple_segregated_storage<std::size_t> storage;
@@ -114,4 +112,5 @@ int f5()
 	//These two calls frees up all the memory that was stored in those places
 	storage.free(i);
 	storage.free_n(j, 1, 512);
+	//Nothing is displayed for this function
 }
