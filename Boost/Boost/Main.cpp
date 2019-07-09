@@ -4,12 +4,14 @@
 #include <boost/cstdint.hpp>
 #include <boost/variant.hpp>
 #include <boost/pool/simple_segregated_storage.hpp>
+#include <boost/chrono.hpp>
 #include <vector>
 #include <cstddef>
 #include <iostream>
 #include <string>
 #include <cmath>
 
+using namespace boost::chrono;
 using namespace boost::algorithm;
 
 void f1();
@@ -17,6 +19,7 @@ void f2();
 void f3();
 void f4();
 void f5();
+void f6();
 
 int main()
 {
@@ -29,6 +32,8 @@ int main()
 	f4();//Variant
 	system("pause");
 	f5();//Pool
+	system("pause");
+	f6();//Chrono
 	system("pause");
 	return 0;
 }
@@ -113,4 +118,25 @@ void f5()
 	storage.free(i);
 	storage.free_n(j, 1, 512);
 	//Nothing is displayed for this function
+}
+
+//Chrono
+void f6()
+{
+	std::cout << system_clock::now() << '\n';
+#ifdef BOOST_CHRONO_HAS_CLOCK_STEADY
+	std::cout << steady_clock::now() << '\n';
+#endif
+	std::cout << high_resolution_clock::now() << '\n';
+
+#ifdef BOOST_CHRONO_HAS_PROCESS_CLOCKS
+	std::cout << process_real_cpu_clock::now() << '\n';
+	std::cout << process_user_cpu_clock::now() << '\n';
+	std::cout << process_system_cpu_clock::now() << '\n';
+	std::cout << process_cpu_clock::now() << '\n';
+#endif
+
+#ifdef BOOST_CHRONO_HAS_THREAD_CLOCK
+	std::cout << thread_clock::now() << '\n';
+#endif
 }
